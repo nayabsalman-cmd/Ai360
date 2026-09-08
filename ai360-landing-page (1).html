@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ai360 — AI Voice Agents & Business Automation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #09090b;
+    --bg-elevated: #111113;
+    --card: #17171a;
+    --border: rgba(255,255,255,0.09);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --text-faint: #71717a;
+    --purple: #7C3AED;
+    --blue: #2563EB;
+    --radius: 0.65rem;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  img,svg{ display:block; }
+
+  .wrap{
+    max-width:1120px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+  }
+
+  /* ---------- shared ---------- */
+
+  .eyebrow-mark{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    color:var(--text-faint);
+    font-size:0.875rem;
+    font-weight:500;
+    letter-spacing:0.01em;
+  }
+
+  .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    flex-shrink:0;
+  }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    font-family:inherit;
+    font-size:0.9375rem;
+    font-weight:600;
+    padding:0.8rem 1.5rem;
+    border-radius:0.5rem;
+    cursor:pointer;
+    border:1px solid transparent;
+    text-decoration:none;
+    transition:transform 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+    white-space:nowrap;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn:focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
+
+  .btn-primary{
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    color:#fff;
+    box-shadow:0 1px 0 0 rgba(255,255,255,0.12) inset, 0 8px 24px -8px rgba(124,58,237,0.55);
+  }
+  .btn-primary:hover{ filter:brightness(1.08); }
+
+  .btn-secondary{
+    background:transparent;
+    color:var(--text);
+    border-color:var(--border-strong);
+  }
+  .btn-secondary:hover{ background:rgba(255,255,255,0.04); border-color:rgba(255,255,255,0.28); }
+
+  section{ position:relative; }
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    padding:104px 0 88px;
+    position:relative;
+  }
+
+  .hero::before{
+    content:"";
+    position:absolute;
+    top:-180px;
+    left:50%;
+    width:900px;
+    height:560px;
+    transform:translateX(-50%);
+    background:
+      radial-gradient(closest-side, rgba(124,58,237,0.22), transparent),
+      radial-gradient(closest-side at 70% 40%, rgba(37,99,235,0.18), transparent);
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .hero-inner{
+    position:relative;
+    z-index:1;
+    max-width:760px;
+    margin:0 auto;
+    text-align:center;
+  }
+
+  .brand-mark{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:2.75rem;
+    opacity:0;
+    animation:rise 0.6s ease forwards;
+  }
+
+  .brand-mark .logo-sq{
+    width:26px; height:26px; border-radius:7px;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem; font-weight:800; color:#fff;
+  }
+
+  .brand-mark span{
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:-0.01em;
+  }
+
+  h1.headline{
+    font-size:clamp(2.1rem, 4.6vw, 3.4rem);
+    font-weight:700;
+    letter-spacing:-0.025em;
+    line-height:1.12;
+    color:#fff;
+    opacity:0;
+    animation:rise 0.6s ease 0.08s forwards;
+  }
+
+  .subheadline{
+    margin:1.5rem auto 0;
+    max-width:600px;
+    font-size:1.09rem;
+    color:var(--text-muted);
+    font-weight:400;
+    line-height:1.6;
+    opacity:0;
+    animation:rise 0.6s ease 0.16s forwards;
+  }
+
+  .hero-actions{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:2.25rem;
+    opacity:0;
+    animation:rise 0.6s ease 0.24s forwards;
+  }
+
+  @keyframes rise{
+    from{ opacity:0; transform:translateY(10px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  /* video placeholder */
+
+  .video-shell{
+    position:relative;
+    z-index:1;
+    max-width:820px;
+    margin:4rem auto 0;
+    opacity:0;
+    animation:rise 0.6s ease 0.32s forwards;
+  }
+
+  .video-frame{
+    aspect-ratio:16/9;
+    border-radius:12px;
+    border:1px solid var(--border-strong);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%),
+      var(--bg-elevated);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+
+  .video-frame::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(124,58,237,0.14), transparent 55%),
+      radial-gradient(circle at 75% 80%, rgba(37,99,235,0.14), transparent 55%);
+  }
+
+  .play-btn{
+    position:relative;
+    z-index:1;
+    width:64px; height:64px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 30px -8px rgba(124,58,237,0.6);
+  }
+
+  .play-btn svg{ margin-left:3px; }
+
+  .video-caption{
+    position:relative; z-index:1;
+    margin-top:14px;
+    font-size:0.8125rem;
+    color:var(--text-faint);
+    text-align:center;
+  }
+
+  .video-tag{
+    position:absolute;
+    top:14px; left:14px;
+    z-index:1;
+    font-size:0.6875rem;
+    font-weight:600;
+    color:var(--text-muted);
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--border);
+    padding:4px 10px;
+    border-radius:100px;
+  }
+
+  /* ---------- problem section ---------- */
+
+  .problem{
+    padding:96px 0;
+    border-top:1px solid var(--border);
+    background:var(--bg-elevated);
+  }
+
+  .section-head{
+    max-width:620px;
+    margin:0 auto 3.25rem;
+    text-align:center;
+  }
+
+  .section-head h2{
+    margin-top:0.9rem;
+    font-size:clamp(1.6rem, 3vw, 2.1rem);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    color:#fff;
+    line-height:1.25;
+  }
+
+  .section-head p{
+    margin-top:0.9rem;
+    color:var(--text-muted);
+    font-size:1rem;
+    line-height:1.6;
+  }
+
+  .problem-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+
+  .problem-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px 24px;
+  }
+
+  .problem-icon{
+    width:38px; height:38px;
+    border-radius:9px;
+    background:rgba(124,58,237,0.12);
+    border:1px solid rgba(124,58,237,0.25);
+    display:flex; align-items:center; justify-content:center;
+    color:#c4b5fd;
+    margin-bottom:20px;
+  }
+
+  .problem-card h3{
+    font-size:1.05rem;
+    font-weight:600;
+    color:#fff;
+    margin-bottom:9px;
+    letter-spacing:-0.01em;
+  }
+
+  .problem-card p{
+    font-size:0.9rem;
+    color:var(--text-muted);
+    line-height:1.6;
+    margin-bottom:14px;
+  }
+
+  .cost-line{
+    display:flex;
+    align-items:baseline;
+    gap:7px;
+    font-size:0.8125rem;
+    color:#c4b5fd;
+    font-weight:500;
+    padding-top:14px;
+    border-top:1px solid var(--border);
+  }
+
+  /* ---------- solution section ---------- */
+
+  .solution{
+    padding:96px 0 108px;
+    border-top:1px solid var(--border);
+  }
+
+  .benefit-grid{
+    display:grid;
+    grid-template-columns:repeat(6, 1fr);
+    gap:16px;
+  }
+
+  .benefit-card{
+    grid-column:span 2;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:26px 22px;
+    transition:border-color 0.2s ease;
+  }
+  .benefit-card:hover{ border-color:var(--border-strong); }
+
+  .benefit-card:nth-child(4),
+  .benefit-card:nth-child(5){
+    grid-column:span 3;
+  }
+
+  .benefit-icon{
+    width:36px; height:36px;
+    border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom:16px;
+    color:#fff;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+  }
+
+  .benefit-card h3{
+    font-size:0.98rem;
+    font-weight:600;
+    color:#fff;
+    margin-bottom:7px;
+    letter-spacing:-0.01em;
+  }
+
+  .benefit-card p{
+    font-size:0.875rem;
+    color:var(--text-muted);
+    line-height:1.55;
+  }
+
+  /* calendly placeholder */
+
+  .booking-block{
+    margin-top:64px;
+    display:grid;
+    grid-template-columns:0.85fr 1.15fr;
+    gap:0;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+
+  .booking-copy{
+    padding:40px 36px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    border-right:1px solid var(--border);
+  }
+
+  .booking-copy h3{
+    font-size:1.3rem;
+    font-weight:700;
+    color:#fff;
+    letter-spacing:-0.01em;
+    margin-bottom:12px;
+  }
+
+  .booking-copy p{
+    font-size:0.9375rem;
+    color:var(--text-muted);
+    line-height:1.6;
+    margin-bottom:22px;
+  }
+
+  .booking-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .booking-list li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:0.875rem;
+    color:var(--text-muted);
+  }
+
+  .check{
+    width:16px; height:16px;
+    border-radius:50%;
+    background:rgba(124,58,237,0.15);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    color:#c4b5fd;
+  }
+
+  .calendly-embed{
+    background:#fff;
+    display:flex;
+    align-items:stretch;
+    justify-content:center;
+    overflow:hidden;
+  }
+
+  .calendly-embed .calendly-inline-widget{
+    width:100%;
+  }
+
+  /* final CTA */
+
+  .final-cta{
+    margin-top:80px;
+    text-align:center;
+    padding-top:8px;
+  }
+
+  .final-cta h2{
+    font-size:clamp(1.6rem, 3.2vw, 2.2rem);
+    font-weight:700;
+    letter-spacing:-0.02em;
+    color:#fff;
+    margin-bottom:26px;
+  }
+
+  footer{
+    border-top:1px solid var(--border);
+    padding:32px 0;
+  }
+
+  footer .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+
+  footer .foot-brand{
+    display:flex; align-items:center; gap:8px;
+    font-size:0.875rem; font-weight:600; color:var(--text-muted);
+  }
+
+  footer .foot-brand .logo-sq{
+    width:18px; height:18px; border-radius:5px;
+    background:linear-gradient(135deg,var(--purple),var(--blue));
+  }
+
+  footer p{
+    font-size:0.8125rem;
+    color:var(--text-faint);
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width:860px){
+    .problem-grid{ grid-template-columns:1fr; }
+    .benefit-grid{ grid-template-columns:repeat(2,1fr); }
+    .benefit-card{ grid-column:span 1 !important; }
+    .booking-block{ grid-template-columns:1fr; }
+    .booking-copy{ border-right:none; border-bottom:1px solid var(--border); }
+  }
+
+  @media (max-width:560px){
+    .hero{ padding:76px 0 64px; }
+    .problem, .solution{ padding:72px 0; }
+    .hero-actions .btn{ width:100%; }
+    .hero-actions{ flex-direction:column; }
+    footer .wrap{ flex-direction:column; text-align:center; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============ 1. HERO SECTION ============ -->
+  <section class="hero" id="top">
+    <div class="wrap">
+      <div class="hero-inner">
+        <div class="brand-mark">
+          <span class="logo-sq">A</span>
+          <span>Ai360</span>
+        </div>
+
+        <h1 class="headline">Stop Missing Customers. Let AI Handle the Busywork.</h1>
+
+        <p class="subheadline">
+          Ai360 helps businesses automate calls, lead follow-up, appointment booking, and repetitive tasks with intelligent AI-powered systems that work 24/7.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#book" class="btn btn-primary">Book a Free Strategy Call</a>
+          <a href="#problem" class="btn btn-secondary">Learn More</a>
+        </div>
+      </div>
+
+      <div class="video-shell">
+        <div class="video-frame">
+          <span class="video-tag">▶ AI Voice Agent Demo</span>
+          <div class="play-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <p class="video-caption">YouTube video placeholder — embed a live AI voice agent call demo here</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. PROBLEM SECTION ============ -->
+  <section class="problem" id="problem">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow-mark"><span class="dot"></span>The cost of doing it manually</span>
+        <h2>Every missed call is a customer calling your competitor next.</h2>
+        <p>You're busy running the business. But while you're on a job, in a meeting, or off the clock, leads are calling — and if no one picks up, most of them won't call back.</p>
+      </div>
+
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </div>
+          <h3>Missed calls, lost leads</h3>
+          <p>Every unanswered call is a potential customer who moves on to the next business that picks up — often for good.</p>
+          <div class="cost-line">Cost: revenue walking out the door, silently</div>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3>Slow, inconsistent follow-up</h3>
+          <p>Interested leads go cold when replies take hours or days, and without a system, follow-up depends on who remembers to do it.</p>
+          <div class="cost-line">Cost: warm leads cooling off before you reach them</div>
+        </div>
+
+        <div class="problem-card">
+          <div class="problem-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3>Hours lost to admin work</h3>
+          <p>Scheduling, data entry, and repetitive replies eat the hours you should be spending on customers and growth.</p>
+          <div class="cost-line">Cost: your time, spent on tasks that don't grow the business</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. SOLUTION SECTION ============ -->
+  <section class="solution" id="solution">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow-mark"><span class="dot"></span>How Ai360 fixes it</span>
+        <h2>An AI-powered system that answers, follows up, and books — automatically.</h2>
+        <p>Ai360 builds voice agents and automation systems that run in the background of your business, so no customer goes unanswered and no task falls through the cracks.</p>
+      </div>
+
+      <div class="benefit-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+          </div>
+          <h3>24/7 AI Voice Agents</h3>
+          <p>A voice agent answers every call, day or night, so no customer ever hits voicemail.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+          </div>
+          <h3>Automated Lead Follow-Up</h3>
+          <p>Every new lead is contacted instantly and followed up automatically until they respond.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+          </div>
+          <h3>Appointment Booking</h3>
+          <p>Your AI agent checks availability and books appointments straight onto your calendar.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3>Faster Customer Responses</h3>
+          <p>Questions get answered in seconds instead of hours, so customers stay engaged and ready to buy.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          </div>
+          <h3>Custom Business Automation</h3>
+          <p>Beyond voice and leads, we automate the repetitive workflows specific to how your business runs.</p>
+        </div>
+      </div>
+
+      <div class="booking-block" id="book">
+        <div class="booking-copy">
+          <h3>Ready to Make Your Business Smarter?</h3>
+          <p>Book a free strategy call and we'll map out exactly where AI can save you time and win you more customers.</p>
+          <ul class="booking-list">
+            <li><span class="check">✓</span>15-minute call, no obligation</li>
+            <li><span class="check">✓</span>See a live AI voice agent demo</li>
+            <li><span class="check">✓</span>Get a custom automation plan</li>
+          </ul>
+        </div>
+        <div class="calendly-embed">
+          <!-- Calendly inline widget begin -->
+          <div class="calendly-inline-widget" data-url="https://calendly.com/nayabsalman/30min" style="min-width:320px;height:700px;"></div>
+          <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+          <!-- Calendly inline widget end -->
+        </div>
+      </div>
+
+      <div class="final-cta">
+        <a href="#book" class="btn btn-primary" style="padding:0.95rem 2.1rem; font-size:1rem;">Book Your Free Strategy Call</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="foot-brand">
+        <span class="logo-sq"></span>
+        Ai360
+      </div>
+      <p>AI voice agents & business automation, built for growing businesses.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
