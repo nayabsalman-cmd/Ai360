@@ -520,8 +520,37 @@
     footer .wrap{ flex-direction:column; text-align:center; }
   }
 </style>
-</head>
-<body>
+<script src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js" async></script></head>
+<body><openai-chatkit id="my-chat" style="width: 100%; max-width: 800px; height: 600px;"></openai-chatkit>
+
+<script>
+  const DOMAIN_KEY = 'domain_pk_6a9ffaff15f4819084d444abf7a86c53051cb';
+  const API_URL = 'https://openai.secondbrainos.com/chatkit';
+
+  const customFetch = (url, options = {}) => {
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'X-Domain-Key': DOMAIN_KEY,
+      },
+    });
+  };
+
+  function initChatKit() {
+    const chatkit = document.getElementById('my-chat');
+    if (chatkit && chatkit.setOptions) {
+      chatkit.setOptions({
+        api: { url: API_URL, domainKey: DOMAIN_KEY, fetch: customFetch },
+        theme: { colorScheme: 'light' },
+      });
+    } else {
+      setTimeout(initChatKit, 50);
+    }
+  }
+
+  initChatKit();
+</script>
 
   <!-- ============ 1. HERO SECTION ============ -->
   <section class="hero" id="top">
